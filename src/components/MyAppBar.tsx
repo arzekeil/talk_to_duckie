@@ -7,10 +7,10 @@ import { Link } from "@mui/material";
 const MyAppBar: React.FC = () => {
     const APP_BAR_HEIGHT = '64px';
     return (
-        <AppBar position="static" sx={{height: `${APP_BAR_HEIGHT}px`}}>
+        <AppBar position="static" sx={{height: `${APP_BAR_HEIGHT}px`, backgroundColor: '#c28b1d'}}>
             <Toolbar>
                 <Link href="/" color="inherit" underline="none">
-                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                    <Typography variant="h6" component="div" sx={{ flexGrow: 1 }} fontWeight={'bold'}>
                         Talk to Duckie
                     </Typography>
                 </Link>
