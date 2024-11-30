@@ -125,8 +125,6 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({ onSend }) => {
             width="100%"
             height="100%"
             padding={2}
-            bgcolor="grey.100"
-            borderRadius={2}
         >
             {/* Timer Display */}
             {isRecording && (

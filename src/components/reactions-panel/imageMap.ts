@@ -1,4 +1,4 @@
-const images = import.meta.glob('../../assets/teddy-avatar/*.{png,jpg,jpeg,svg}', { eager: true });
+const images = import.meta.glob('../../assets/avatar/*.{png,jpg,jpeg,svg}', { eager: true });
 
 const imageMap: { [key: string]: string } = {};
 

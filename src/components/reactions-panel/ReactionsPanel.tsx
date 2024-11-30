@@ -6,10 +6,11 @@ import AIAvatar from "./AIAvatar";
 const ReactionsPanel = () => {
     return (
         <Box
+            
             display="flex"
             flexDirection="column" // Stack components vertically
             sx={{
-                height: "90vh", // Full viewport height
+                height: "100vh", // Full viewport height
             }}
         >
             <Box

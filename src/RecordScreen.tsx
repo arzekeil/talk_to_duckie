@@ -78,7 +78,7 @@ const App: React.FC = () => {
     sessionStartedRef.current = true; // Mark session as started
 
     setStart(true);
-    
+
     setLoading(true);
     setErrorMessage(null);
     try {
@@ -173,99 +173,95 @@ const App: React.FC = () => {
   }, []);
 
   return (
-    <Box flexGrow={1} display="flex">
-        <Box display="flex" flexGrow={1} height="calc(100vh - 64px)">
-          {/* Code Editor */}
-          <Box
-            flex={1}
-            bgcolor="white"
-            boxShadow={3}
-            borderRadius={2}
-            p={2}
-            display="flex"
-            flexDirection="column"
-          >
-            <Editor
-              height="40vh"
-              defaultLanguage="python"
-              theme="vs-dark"
-              value={question}
-              options={{ readOnly: true, lineNumbers: "off" }}
-            />
-            <CodeEditor 
-              defaultLanguage="python"
-              theme="vs-dark"
-              timer={timer}
-              onRun={handleRunCode} 
-            />
-            {codeOutput && (
-              <Paper elevation={1} sx={{ p: 2, mt: 2 }}>
-                <Typography variant="subtitle1" fontWeight="bold">
-                  Output:
-                </Typography>
-                <Typography variant="body2" component="pre">
-                  {codeOutput}
-                </Typography>
-              </Paper>
-            )}
-          </Box>
+    <Box flexGrow={1} display="flex" height="calc(100vh - 64px)">
+      {/* Code Editor Section */}
+      <Box
+        flex={6} // 50% width
+        bgcolor="white"
+        boxShadow={3}
+        borderRadius={2}
+        p={2}
+        display="flex"
+        flexDirection="column"
+      >
+        <Editor
+          height="40vh"
+          defaultLanguage="python"
+          theme="vs-dark"
+          value={question}
+          options={{ readOnly: true, lineNumbers: "off" }}
+        />
+        <CodeEditor
+          defaultLanguage="python"
+          theme="vs-dark"
+          timer={timer}
+          onRun={handleRunCode}
+        />
+        {codeOutput && (
+          <Paper elevation={1} sx={{ p: 2, mt: 2 }}>
+            <Typography variant="subtitle1" fontWeight="bold">
+              Output:
+            </Typography>
+            <Typography variant="body2" component="pre">
+              {codeOutput}
+            </Typography>
+          </Paper>
+        )}
+      </Box>
 
-          {/* Chat Section */}
-          <Box
-            flex={1}
-            bgcolor="white"
-            boxShadow={3}
-            borderRadius={2}
-            display="flex"
-            flexDirection="column"
-          >
-            {/* Toggle Switch */}
-            <Box p={2} display="flex" justifyContent="flex-end">
-              <FormControlLabel
-                control={
-                  <Switch
-                    checked={showMessages}
-                    onChange={() => setShowMessages((prev) => !prev)}
-                    color="primary"
-                  />
-                }
-                label="Show Messages"
+      {/* Chat Section */}
+      <Box
+        flex={3} // 30% width
+        bgcolor="white"
+        boxShadow={3}
+        borderRadius={2}
+        display="flex"
+        flexDirection="column"
+      >
+        {/* Toggle Switch */}
+        <Box p={2} display="flex" justifyContent="flex-end">
+          <FormControlLabel
+            control={
+              <Switch
+                checked={showMessages}
+                onChange={() => setShowMessages((prev) => !prev)}
+                color="primary"
               />
-            </Box>
-
-            {/* Messages Wrapper */}
-            <Box flexGrow={1} display="flex" flexDirection="column" overflow="auto" p={2}>
-              {showMessages &&
-                sortMessages().map((message) => (
-                  <Box key={message.id} mb={1} px={1}>
-                    <MessageWidget message={message} />
-                  </Box>
-                ))}
-            </Box>
-
-            {/* Audio Recorder */}
-            <Box
-              p={2}
-              bgcolor="grey.200"
-              borderTop="1px solid"
-              borderColor="grey.300"
-            >
-              <AudioRecorder
-                onSend={({ audioUrl, text }) =>
-                  addUserMessage(
-                    new Message(
-                      Date.now(),
-                      "user",
-                      text || "Audio message sent",
-                      audioUrl
-                    )
-                  )
-                }
-              />
-            </Box>
-          </Box>
-          <ReactionsPanel />
+            }
+            label="Show Messages"
+          />
         </Box>
+
+        {/* Messages Wrapper */}
+        <Box flexGrow={1} display="flex" flexDirection="column" overflow="auto" p={2}>
+          {showMessages &&
+            sortMessages().map((message) => (
+              <Box key={message.id} mb={1} px={1}>
+                <MessageWidget message={message} />
+              </Box>
+            ))}
+        </Box>
+      </Box>
+
+      {/* Reactions Panel */}
+      <Box flex={1} // 20% width
+        display="flex"
+        flexDirection="column"
+      >
+        <ReactionsPanel />
+        <AudioRecorder
+            onSend={({ audioUrl, text }) =>
+              addUserMessage(
+                new Message(
+                  Date.now(),
+                  "user",
+                  text || "Audio message sent",
+                  audioUrl
+                )
+              )
+            }
+          />
+      </Box>
       <Modal open={showFeedback} onClose={() => setShowFeedback(false)}>
         <Box
           sx={{

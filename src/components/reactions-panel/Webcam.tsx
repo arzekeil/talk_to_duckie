@@ -38,7 +38,13 @@ const WebcamComponent = () => {
                     ref={videoRef}
                     autoPlay
                     playsInline
-                    style={{ width: "20rem", borderRadius: "8px", border: "1px solid #ccc" }}
+                    style={{
+                        width: "256px",
+                        height: "256px",
+                        border: "2px solid #ccc", // Optional: Add a border
+                        objectFit: "cover", // Ensures the video fits the circular frame
+                        backgroundColor: "#000", // Optional: Fallback background color
+                    }}
                 />
             )}
         </div>
