@@ -194,11 +194,6 @@ const App: React.FC = () => {
               options={{ readOnly: true, lineNumbers: "off" }}
             />
             <CodeEditor defaultLanguage="python" onRun={handleRunCode} />
-            {loading && (
-              <Typography variant="body1" textAlign="center" mt={2}>
-                Running code...
-              </Typography>
-            )}
             {codeOutput && (
               <Paper elevation={1} sx={{ p: 2, mt: 2 }}>
                 <Typography variant="subtitle1" fontWeight="bold">
