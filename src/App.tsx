@@ -34,7 +34,6 @@ const App = () => {
                             <ProtectedRoute element={<RecordScreen />} />
                         }
                     />
-                    {/* <ProtectedRoute path="/mock" component={RecordScreen} /> */}
                 </Routes>
             </Box>
         </Router>

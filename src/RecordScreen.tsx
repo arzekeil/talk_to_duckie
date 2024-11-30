@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import MessageWidget from "./widgets/MessageWidget";
 import AudioRecorder from "./components/AudioRecorder";
 import Message from "./types/Message";
@@ -7,6 +7,7 @@ import { Box, Button, CircularProgress, Paper, Typography, Switch, FormControlLa
 import { Editor } from "@monaco-editor/react";
 
 import { MuiMarkdown } from 'mui-markdown';
+import ReactionsPanel from "./components/reactions-panel/ReactionsPanel";
 
 const BASE_URL = "http://localhost:5000";
 
@@ -14,6 +15,7 @@ const App: React.FC = () => {
   const [userMessages, setUserMessages] = useState<Message[]>([]);
   const [recipientMessages, setRecipientMessages] = useState<Message[]>([]);
   const [start, setStart] = useState(false);
+  const sessionStartedRef = useRef(false); // Tracks whether the session has started
   const [loading, setLoading] = useState(false);
   const [codeOutput, setCodeOutput] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
@@ -67,7 +69,11 @@ const App: React.FC = () => {
   };
 
   const startSession = async () => {
+    if (sessionStartedRef.current) return; // Prevent duplicate calls
+    sessionStartedRef.current = true; // Mark session as started
+
     setStart(true);
+    
     setLoading(true);
     setErrorMessage(null);
     try {
@@ -154,27 +160,15 @@ const App: React.FC = () => {
     synth.speak(utterance);
   };
 
+  useEffect(() => {
+    // Automatically start the session when the screen is rendered
+    if (!start) {
+      startSession();
+    }
+  }, []);
+
   return (
     <Box flexGrow={1} display="flex">
-      {!start && (
-        <Box
-          flexGrow={1}
-          display="flex"
-          justifyContent="center"
-          alignItems="center"
-          p={2}
-        >
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={startSession}
-            disabled={loading}
-          >
-            {loading ? <CircularProgress size={24} color="inherit" /> : "Start Session"}
-          </Button>
-        </Box>
-      )}
-      {start && (
         <Box display="flex" flexGrow={1} height="calc(100vh - 64px)">
           {/* Code Editor */}
           <Box
@@ -260,8 +254,8 @@ const App: React.FC = () => {
               />
             </Box>
           </Box>
+          <ReactionsPanel />
         </Box>
-      )}
       <Modal open={showFeedback} onClose={() => setShowFeedback(false)}>
         <Box
           sx={{
