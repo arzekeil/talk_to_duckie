@@ -26,7 +26,7 @@ const App: React.FC = () => {
   const getAIResponse = async (userText: string) => {
     try {
       // Simulate an API call
-      const response = await fetch("http://localhost:5000/ai-response", {
+      const response = await fetch("http://localhost:5000/parse_response", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -1,37 +1,31 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request
 from flask_cors import CORS
-# from interact import interact
+from voiceflow import interact, set_timer_end
 
 app = Flask(__name__)
-CORS(app)  # Enable CORS for all routes
+CORS(app)
 
 @app.route('/')
 def hello():
     return '<h1>Hello, World!</h1>'
 
 
-@app.route("/parse_recording", methods=["POST"])
+@app.route("/parse_response", methods=["POST"])
 def parse_recording():
     user_id = "testing"
     data = request.get_json()
-    message = data.get("message")
+    message = data.get("userText", '')
     print("message", message)
     response = interact(user_id, { 'type': 'text', 'payload': message })
     return { "response": response }
 
-@app.route('/ai-response', methods=['POST'])
-def ai_response():
-    # Parse the JSON data from the request body
-    data = request.get_json()
-    
-    # Extract the 'userText' field
-    user_text = data.get('userText', '')
-    
-    # Print the userText to the console
-    print(f"Received userText: {user_text}")
-    
-    # Send a response back
-    return jsonify({"response": "userText received", "userText": user_text}), 200
+
+@app.route("/timer_end", methods=["POST"])
+def timer_end():
+    user_id = "testing"
+    response = set_timer_end(user_id)
+    return { "response": response }
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
