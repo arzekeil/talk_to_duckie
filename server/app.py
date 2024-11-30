@@ -5,6 +5,9 @@ from voiceflow import interact, set_timer_end
 app = Flask(__name__)
 CORS(app)
 
+user_id = "testing"
+
+
 @app.route('/')
 def hello():
     return '<h1>Hello, World!</h1>'
@@ -12,7 +15,6 @@ def hello():
 
 @app.route("/parse_response", methods=["POST"])
 def parse_recording():
-    user_id = "testing"
     data = request.get_json()
     message = data.get("userText", '')
     print("message", message)
@@ -20,9 +22,14 @@ def parse_recording():
     return { "response": response }
 
 
+@app.route("/start", methods=["POST"])
+def start():
+    response = interact(user_id, { 'type': 'launch' })
+    return { "response": response }
+
+
 @app.route("/timer_end", methods=["POST"])
 def timer_end():
-    user_id = "testing"
     response = set_timer_end(user_id)
     return { "response": response }
 

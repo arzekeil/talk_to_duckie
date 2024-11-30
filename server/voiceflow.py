@@ -28,8 +28,6 @@ def interact(user_id, request):
             replies.append(False)
     return replies
     
-interact(user_id, { 'type': 'launch' })
-
 
 def set_timer_end(user_id):
     payload = { "action": {
