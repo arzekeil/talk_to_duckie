@@ -1,11 +1,12 @@
 from flask import Flask, request
 from flask_cors import CORS
 from voiceflow import interact, set_timer_end
+import uuid
 
 app = Flask(__name__)
 CORS(app)
 
-user_id = "testing"
+user_id = str(uuid.uuid4())
 
 
 @app.route('/')
