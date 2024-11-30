@@ -22,7 +22,7 @@ const ReactionsPanel = () => {
                     justifyContent: "center",
                 }}
             >
-                <WebcamComponent />
+                <AIAvatar />
             </Box>
 
             <Box
@@ -33,7 +33,7 @@ const ReactionsPanel = () => {
                     justifyContent: "center",
                 }}
             >
-                <AIAvatar />
+                <WebcamComponent />
             </Box>
         </Box>
     );
