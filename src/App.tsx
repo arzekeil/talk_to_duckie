@@ -4,6 +4,7 @@ import MessageWidget from "./widgets/MessageWidget";
 import AudioRecorder from "./components/AudioRecorder";
 import Message from "./types/Message";
 import CodeEditor from "./components/CodeEditor";
+import { Editor } from "@monaco-editor/react";
 
 const BASE_URL = "http://localhost:5000";
 
@@ -14,6 +15,7 @@ const App: React.FC = () => {
   const [loading, setLoading] = useState(false);
   const [codeOutput, setCodeOutput] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [question, setQuestion] = useState("");
 
   const addUserMessage = (message: Message) => {
     setUserMessages((prevMessages) => [...prevMessages, message]);
@@ -46,10 +48,15 @@ const App: React.FC = () => {
       const data = await response.json();
 
       for (let i = 0; i < data.response.length; i++) {
+        const messageLine = data.response[i] || "I didn't understand that.";
+        if (messageLine.startsWith("Question:")) {
+          setQuestion(`# ${messageLine.split("Question: ")[1]}`);
+          continue;
+        }
         const aiMessage = new Message(
           Date.now(),
           "recipient",
-          data.response[i] || "I didn't understand that."
+          messageLine,
         );
         addRecipientMessage(aiMessage);
         await new Promise((resolve) => setTimeout(resolve, 2000));

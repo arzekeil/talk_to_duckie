@@ -1,6 +1,6 @@
 from flask import Flask, request
 from flask_cors import CORS
-from voiceflow import interact, set_timer_end
+from voiceflow import interact, set_timer_end, set_variable, trigger_submit_code
 import uuid
 
 app = Flask(__name__)
@@ -34,6 +34,13 @@ def timer_end():
     response = set_timer_end(user_id)
     return { "response": response }
 
+
+@app.route("/submit_code", methods=["POST"])
+def submit_code():
+    data = request.get_json()
+    code = data.get("code", '')
+    response = trigger_submit_code(user_id, code)
+    return { "response": response }
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)
