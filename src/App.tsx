@@ -5,6 +5,7 @@ import AudioRecorder from "./components/AudioRecorder";
 import Message from "./types/Message";
 import CodeEditor from "./components/CodeEditor";
 import { Box, Button, CircularProgress, Paper, Typography, Switch, FormControlLabel } from "@mui/material";
+import { Editor } from "@monaco-editor/react";
 
 const BASE_URL = "http://localhost:5000";
 
@@ -175,6 +176,13 @@ const App: React.FC = () => {
               display="flex"
               flexDirection="column"
             >
+              <Editor
+                height="40vh"
+                defaultLanguage="python"
+                theme="vs-dark"
+                value={question}
+                options={{ readOnly: true, lineNumbers: "off" }}
+              />
               <CodeEditor defaultLanguage="python" onRun={handleRunCode} />
               {loading && (
                 <Typography variant="body1" textAlign="center" mt={2}>
