@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Editor from "@monaco-editor/react";
+import { Box, Button, MenuItem, Select } from "@mui/material";
 
 type CodeEditorProps = {
     defaultLanguage?: string;
@@ -30,23 +31,27 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
     };
 
     return (
-        <div className="flex flex-col h-[90vh] p-2">
-            <div className="mb-2">
-                <select
+        <Box display="flex" flexDirection="column" height="90vh" p={2}>
+            {/* Language Selector */}
+            <Box mb={2}>
+                <Select
                     value={language}
                     onChange={(e) => {
                         const newLang = e.target.value;
                         setLanguage(newLang);
                         setCode(defaultSamples[newLang] || "");
                     }}
-                    className="px-2 py-1 border rounded"
+                    variant="outlined"
+                    sx={{ minWidth: 150 }}
                 >
-                    <option value="python">Python</option>
-                    <option value="javascript">JavaScript</option>
-                    <option value="typescript">TypeScript</option>
-                </select>
-            </div>
-            <div className="flex-grow">
+                    <MenuItem value="python">Python</MenuItem>
+                    <MenuItem value="javascript">JavaScript</MenuItem>
+                    <MenuItem value="typescript">TypeScript</MenuItem>
+                </Select>
+            </Box>
+
+            {/* Code Editor */}
+            <Box flexGrow={1}>
                 <Editor
                     height="100%"
                     language={language}
@@ -58,16 +63,20 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
                         wordWrap: "on",
                     }}
                 />
-            </div>
-            <div className="mt-2 text-center">
-                <button
+            </Box>
+
+            {/* Run Button */}
+            <Box mt={2} textAlign="right">
+                <Button
+                    variant="contained"
+                    color="primary"
                     onClick={handleRun}
-                    className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded"
+                    sx={{ py: 1, px: 4 }}
                 >
                     Run
-                </button>
-            </div>
-        </div>
+                </Button>
+            </Box>
+        </Box>
     );
 };
 

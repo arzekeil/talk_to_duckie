@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import AppBar from "./components/AppBar";
+import MyAppBar from "./components/MyAppBar";
 import MessageWidget from "./widgets/MessageWidget";
 import AudioRecorder from "./components/AudioRecorder";
 import Message from "./types/Message";
 import CodeEditor from "./components/CodeEditor";
-import { Editor } from "@monaco-editor/react";
+import { Box, Button, CircularProgress, Paper, Typography, Switch, FormControlLabel } from "@mui/material";
 
 const BASE_URL = "http://localhost:5000";
 
@@ -16,6 +16,7 @@ const App: React.FC = () => {
   const [codeOutput, setCodeOutput] = useState<string | null>(null);
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [question, setQuestion] = useState("");
+  const [showMessages, setShowMessages] = useState(true); // State to toggle message visibility
 
   const addUserMessage = (message: Message) => {
     setUserMessages((prevMessages) => [...prevMessages, message]);
@@ -53,11 +54,7 @@ const App: React.FC = () => {
           setQuestion(`# ${messageLine.split("Question: ")[1]}`);
           continue;
         }
-        const aiMessage = new Message(
-          Date.now(),
-          "recipient",
-          messageLine,
-        );
+        const aiMessage = new Message(Date.now(), "recipient", messageLine);
         addRecipientMessage(aiMessage);
         await new Promise((resolve) => setTimeout(resolve, 1000));
       }
@@ -111,7 +108,7 @@ const App: React.FC = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ code })
+        body: JSON.stringify({ code }),
       });
 
       if (!response.ok) throw new Error("Failed to execute code");
@@ -122,11 +119,7 @@ const App: React.FC = () => {
       for (let i = 0; i < data.response.length; i++) {
         const messageLine = data.response[i] || "I didn't understand that.";
 
-        const aiMessage = new Message(
-          Date.now(),
-          "recipient",
-          messageLine,
-        );
+        const aiMessage = new Message(Date.now(), "recipient", messageLine);
         addRecipientMessage(aiMessage);
         await new Promise((resolve) => setTimeout(resolve, 1000));
       }
@@ -148,49 +141,98 @@ const App: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-200 to-gray-100 flex flex-col">
-      <AppBar />
+    <Box display="flex" flexDirection="column" minHeight="100vh" bgcolor="grey.100">
+      <MyAppBar />
 
-      <main className="flex-grow flex">
+      <Box flexGrow={1} display="flex">
         {!start && (
-          <div className="flex-grow flex justify-center items-center">
-            <button
-              className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 disabled:opacity-50"
+          <Box
+            flexGrow={1}
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            p={2}
+          >
+            <Button
+              variant="contained"
+              color="primary"
               onClick={startSession}
               disabled={loading}
             >
-              {loading ? "Loading..." : "Start Session"}
-            </button>
-          </div>
+              {loading ? <CircularProgress size={24} color="inherit" /> : "Start Session"}
+            </Button>
+          </Box>
         )}
         {start && (
-          <div className="flex flex-grow" style={{ height: "calc(100vh - 64px)" }}>
+          <Box display="flex" flexGrow={1} height="calc(100vh - 64px)">
             {/* Code Editor */}
-            <div className="flex-grow bg-white shadow-lg rounded-l-xl p-4" style={{ width: "50%" }}>
+            <Box
+              flex={1}
+              bgcolor="white"
+              boxShadow={3}
+              borderRadius={2}
+              p={2}
+              display="flex"
+              flexDirection="column"
+            >
               <CodeEditor defaultLanguage="python" onRun={handleRunCode} />
-              {loading && <div className="text-center mt-4 animate-pulse">Running code...</div>}
-              {codeOutput && (
-                <div className="bg-gray-200 p-4 mt-4 rounded">
-                  <strong>Output:</strong>
-                  <pre>{codeOutput}</pre>
-                </div>
+              {loading && (
+                <Typography variant="body1" textAlign="center" mt={2}>
+                  Running code...
+                </Typography>
               )}
-            </div>
+              {codeOutput && (
+                <Paper elevation={1} sx={{ p: 2, mt: 2 }}>
+                  <Typography variant="subtitle1" fontWeight="bold">
+                    Output:
+                  </Typography>
+                  <Typography variant="body2" component="pre">
+                    {codeOutput}
+                  </Typography>
+                </Paper>
+              )}
+            </Box>
 
             {/* Chat Section */}
-            <div className="bg-white shadow-lg rounded-r-xl flex flex-col" style={{ width: "50%" }}>
-              {/* Chat Messages */}
-              <div className="flex-grow p-4 space-y-4 overflow-y-auto">
-                {sortMessages().map((message) => (
-                  <MessageWidget key={message.id} message={message} />
-                ))}
-              </div>
-              {/* Error Message */}
-              {errorMessage && (
-                <div className="text-red-500 text-center py-2 bg-red-100 rounded-md">{errorMessage}</div>
-              )}
+            <Box
+              flex={1}
+              bgcolor="white"
+              boxShadow={3}
+              borderRadius={2}
+              display="flex"
+              flexDirection="column"
+            >
+              {/* Toggle Switch */}
+              <Box p={2} display="flex" justifyContent="flex-end">
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={showMessages}
+                      onChange={() => setShowMessages((prev) => !prev)}
+                      color="primary"
+                    />
+                  }
+                  label="Show Messages"
+                />
+              </Box>
+
+              {/* Messages Wrapper */}
+              <Box flexGrow={1} display="flex" flexDirection="column" overflow="auto" p={2}>
+                {showMessages &&
+                  sortMessages().map((message) => (
+                    <Box key={message.id} mb={1} px={1}>
+                      <MessageWidget message={message} />
+                    </Box>
+                  ))}
+              </Box>
+
               {/* Audio Recorder */}
-              <div className="bg-gray-100 border-t border-gray-300 p-4 rounded-b-xl">
+              <Box
+                p={2}
+                bgcolor="grey.200"
+                borderTop="1px solid"
+                borderColor="grey.300"
+              >
                 <AudioRecorder
                   onSend={({ audioUrl, text }) =>
                     addUserMessage(
@@ -203,12 +245,12 @@ const App: React.FC = () => {
                     )
                   }
                 />
-              </div>
-            </div>
-          </div>
+              </Box>
+            </Box>
+          </Box>
         )}
-      </main>
-    </div>
+      </Box>
+    </Box>
   );
 };
 

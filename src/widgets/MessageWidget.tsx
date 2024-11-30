@@ -1,5 +1,7 @@
 import React from "react";
-// import { PiWaveformDuotone } from "react-icons/pi";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import Paper from "@mui/material/Paper";
 import Message from "../types/Message"; // Adjust the import path based on your project structure
 
 interface MessageWidgetProps {
@@ -8,21 +10,24 @@ interface MessageWidgetProps {
 
 const MessageWidget: React.FC<MessageWidgetProps> = ({ message }) => {
     return (
-        <div className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"} w-full`}>
-            {message.sender === "user" ? (
-                // <div className="flex items-center justify-center bg-blue-500 text-white rounded-full w-12 h-12">
-                //     {/* <PiWaveformDuotone size={24} /> */}
-                //     {message.text}
-                // </div>
-                <div className="bg-blue-300 text-gray-800 px-4 py-2 rounded-lg max-w-xs">
-                    {message.text}
-                </div>
-            ) : (
-                <div className="bg-gray-300 text-gray-800 px-4 py-2 rounded-lg max-w-xs">
-                    {message.text}
-                </div>
-            )}
-        </div>
+        <Box
+            display="flex"
+            justifyContent={message.sender === "user" ? "flex-end" : "flex-start"}
+            width="100%"
+        >
+            <Paper
+                elevation={3}
+                sx={{
+                    padding: 2,
+                    maxWidth: "300px",
+                    backgroundColor: message.sender === "user" ? "primary.light" : "grey.300",
+                    color: message.sender === "user" ? "primary.contrastText" : "text.primary",
+                    borderRadius: 2,
+                }}
+            >
+                <Typography variant="body1">{message.text}</Typography>
+            </Paper>
+        </Box>
     );
 };
 

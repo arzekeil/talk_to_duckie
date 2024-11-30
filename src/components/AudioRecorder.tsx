@@ -1,9 +1,30 @@
 import React, { useState, useRef } from "react";
-import { FaMicrophone, FaStop, FaSpinner } from "react-icons/fa";
+import { FaMicrophone, FaStop } from "react-icons/fa";
+import Box from "@mui/material/Box";
+import Typography from "@mui/material/Typography";
+import CircularProgress from "@mui/material/CircularProgress";
+import Button from "@mui/material/Button";
+import { styled } from "@mui/material/styles";
 
 interface AudioRecorderProps {
     onSend: (message: { audioUrl: string; text?: string }) => void; // Callback to send a new message with audio URL and text
 }
+
+const RecordingButton = styled(Button)(({ theme }) => ({
+    width: "64px",
+    height: "64px",
+    borderRadius: "50%",
+    color: theme.palette.common.white,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    fontSize: "28px",
+    boxShadow: theme.shadows[4],
+    "&:hover": {
+        transform: "scale(1.1)",
+        boxShadow: theme.shadows[6],
+    },
+}));
 
 const AudioRecorder: React.FC<AudioRecorderProps> = ({ onSend }) => {
     const [isRecording, setIsRecording] = useState<boolean>(false);
@@ -96,34 +117,51 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({ onSend }) => {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center w-full h-full p-4 bg-gray-100 rounded-lg">
+        <Box
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            justifyContent="center"
+            width="100%"
+            height="100%"
+            padding={2}
+            bgcolor="grey.100"
+            borderRadius={2}
+        >
             {/* Timer Display */}
-            <div
-                className={`text-center font-bold mb-4 text-gray-700 transition-opacity duration-300 ${isRecording ? "opacity-100" : "opacity-0"
-                    }`}
-            >
-                Recording: {formatTime(recordingTime)}
-            </div>
+            {isRecording && (
+                <Typography
+                    variant="h6"
+                    color="textSecondary"
+                    sx={{ mb: 2, transition: "opacity 0.3s" }}
+                >
+                    Recording: {formatTime(recordingTime)}
+                </Typography>
+            )}
 
             {/* Loading Indicator */}
             {isTranscribing && (
-                <div className="flex items-center justify-center mb-4 text-blue-600">
-                    <FaSpinner className="animate-spin mr-2" />
-                    <span>Transcribing...</span>
-                </div>
+                <Box display="flex" alignItems="center" justifyContent="center" mb={2}>
+                    <CircularProgress size={24} color="primary" sx={{ mr: 1 }} />
+                    <Typography variant="body2" color="primary">
+                        Transcribing...
+                    </Typography>
+                </Box>
             )}
 
             {/* Recording Controls */}
-            <button
+            <RecordingButton
                 onClick={isRecording ? stopRecording : startRecording}
-                className={`flex items-center justify-center w-16 h-16 rounded-full text-white focus:outline-none transition-transform duration-300 ${isRecording
-                    ? "bg-red-600 hover:bg-red-700 transform scale-110"
-                    : "bg-green-600 hover:bg-green-700"
-                    }`}
+                sx={{
+                    bgcolor: isRecording ? "error.main" : "success.main",
+                    "&:hover": {
+                        bgcolor: isRecording ? "error.dark" : "success.dark",
+                    },
+                }}
             >
-                {isRecording ? <FaStop size={28} /> : <FaMicrophone size={28} />}
-            </button>
-        </div>
+                {isRecording ? <FaStop /> : <FaMicrophone />}
+            </RecordingButton>
+        </Box>
     );
 };
 
