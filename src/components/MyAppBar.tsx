@@ -10,7 +10,7 @@ const MyAppBar: React.FC = () => {
             <Toolbar>
                 <Link href="/" color="inherit" underline="none">
                     <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-                        Talk to Teddy
+                        Talk to Duckie
                     </Typography>
                 </Link>
             </Toolbar>
