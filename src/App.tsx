@@ -7,6 +7,7 @@ import CodeEditor from "./components/CodeEditor";
 import { Box, Button, CircularProgress, Paper, Typography, Switch, FormControlLabel, Modal } from "@mui/material";
 import { Editor } from "@monaco-editor/react";
 import { MuiMarkdown } from 'mui-markdown';
+import ReactionsPanel from "./components/reactions-panel/ReactionsPanel";
 
 const BASE_URL = "http://localhost:5000";
 
@@ -268,6 +269,7 @@ const App: React.FC = () => {
                 />
               </Box>
             </Box>
+            <ReactionsPanel />
           </Box>
         )}
         <Modal open={showFeedback} onClose={() => setShowFeedback(false)}>
