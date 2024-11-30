@@ -11,10 +11,10 @@ export default defineConfig({
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/proxy/, ''), // Optional: rewrite the API prefix
       },
-      '/ai-response': {
+      '/parse_response': {
         target: 'http://127.0.0.1:5000', 
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/ai-response/, ''), // Optional: rewrite the API prefix
+        rewrite: (path) => path.replace(/^\/parse_response/, ''), // Optional: rewrite the API prefix
       },
     },
   },
