@@ -51,10 +51,7 @@ const App: React.FC = () => {
 
       for (let i = 0; i < data.response.length; i++) {
         const messageLine = data.response[i] || "I didn't understand that.";
-        if (messageLine.startsWith("Question:")) {
-          setQuestion(`# ${messageLine.split("Question: ")[1]}`);
-          continue;
-        }
+
         const aiMessage = new Message(Date.now(), "recipient", messageLine);
         addRecipientMessage(aiMessage);
         await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -84,10 +81,17 @@ const App: React.FC = () => {
       const data = await response.json();
 
       for (let i = 0; i < data.response.length; i++) {
+        const messageLine = data.response[i] || "I didn't understand that.";
+
+        if (messageLine.startsWith("Question:")) {
+
+          setQuestion(`${messageLine.split("Question: ")[1]}`);
+          continue;
+        }
         const aiMessage = new Message(
           Date.now(),
           "recipient",
-          data.response[i] || "I didn't understand that."
+          messageLine,
         );
         addRecipientMessage(aiMessage);
         await new Promise((resolve) => setTimeout(resolve, 2000));
