@@ -22,6 +22,7 @@ const App: React.FC = () => {
 
   const addRecipientMessage = (message: Message) => {
     setRecipientMessages((prevMessages) => [...prevMessages, message]);
+    readAloud(message.text); // Trigger TTS for recipient messages
   };
 
   const sortMessages = () => {
@@ -30,7 +31,7 @@ const App: React.FC = () => {
 
   const getAIResponse = async (userText: string) => {
     setLoading(true);
-    setErrorMessage(null); // Clear any existing errors
+    setErrorMessage(null);
     try {
       const response = await fetch(`${BASE_URL}/parse_response`, {
         method: "POST",
@@ -64,7 +65,7 @@ const App: React.FC = () => {
   const startSession = async () => {
     setStart(true);
     setLoading(true);
-    setErrorMessage(null); // Clear any existing errors
+    setErrorMessage(null);
     try {
       const response = await fetch(`${BASE_URL}/start`, {
         method: "POST",
@@ -96,7 +97,7 @@ const App: React.FC = () => {
 
   const handleRunCode = async (code: string) => {
     setLoading(true);
-    setErrorMessage(null); // Clear any existing errors
+    setErrorMessage(null);
     try {
       const response = await fetch(`${BASE_URL}/run_code`, {
         method: "POST",
@@ -118,6 +119,15 @@ const App: React.FC = () => {
     }
   };
 
+  const readAloud = (text: string | undefined) => {
+    if (!text) return;
+    const synth = window.speechSynthesis;
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.rate = 1; // Adjust speed
+    utterance.pitch = 2; // Adjust pitch
+    synth.speak(utterance);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-200 to-gray-100 flex flex-col">
       <AppBar />
@@ -126,33 +136,20 @@ const App: React.FC = () => {
         {!start && (
           <div className="flex-grow flex justify-center items-center">
             <button
-              className="bg-blue-500 text-white p-2 rounded"
+              className="bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 disabled:opacity-50"
               onClick={startSession}
               disabled={loading}
             >
-              {loading ? "Loading..." : "Start"}
+              {loading ? "Loading..." : "Start Session"}
             </button>
           </div>
         )}
         {start && (
-          <div
-            className="flex flex-grow"
-            style={{
-              height: "calc(100vh - 64px)", // Adjust for AppBar height
-            }}
-          >
+          <div className="flex flex-grow" style={{ height: "calc(100vh - 64px)" }}>
             {/* Code Editor */}
-            <div
-              className="flex-grow bg-white shadow-lg rounded-l-xl p-4"
-              style={{
-                width: "50%",
-              }}
-            >
-              <CodeEditor
-                defaultLanguage="python"
-                onRun={handleRunCode}
-              />
-              {loading && <div className="text-center mt-4">Running code...</div>}
+            <div className="flex-grow bg-white shadow-lg rounded-l-xl p-4" style={{ width: "50%" }}>
+              <CodeEditor defaultLanguage="python" onRun={handleRunCode} />
+              {loading && <div className="text-center mt-4 animate-pulse">Running code...</div>}
               {codeOutput && (
                 <div className="bg-gray-200 p-4 mt-4 rounded">
                   <strong>Output:</strong>
@@ -162,12 +159,7 @@ const App: React.FC = () => {
             </div>
 
             {/* Chat Section */}
-            <div
-              className="bg-white shadow-lg rounded-r-xl flex flex-col"
-              style={{
-                width: "50%",
-              }}
-            >
+            <div className="bg-white shadow-lg rounded-r-xl flex flex-col" style={{ width: "50%" }}>
               {/* Chat Messages */}
               <div className="flex-grow p-4 space-y-4 overflow-y-auto">
                 {sortMessages().map((message) => (
@@ -176,7 +168,7 @@ const App: React.FC = () => {
               </div>
               {/* Error Message */}
               {errorMessage && (
-                <div className="text-red-500 text-center py-2">{errorMessage}</div>
+                <div className="text-red-500 text-center py-2 bg-red-100 rounded-md">{errorMessage}</div>
               )}
               {/* Audio Recorder */}
               <div className="bg-gray-100 border-t border-gray-300 p-4 rounded-b-xl">
