@@ -1,11 +1,12 @@
 import requests
 import os
 from dotenv import load_dotenv
+import uuid
 
 load_dotenv()
 API_KEY = os.getenv('VOICEFLOW_API_KEY')
 
-user_id = "testing"
+user_id = str(uuid.uuid4())
 BASE_URL = f"https://general-runtime.voiceflow.com/state/user/{user_id}"
 
 
@@ -25,7 +26,7 @@ def interact(user_id, request):
             replies.append(trace['payload']['message'])
         elif trace["type"] == "end":
             print("# End of conversation")
-            replies.append(False)
+            # replies.append(False)
     return replies
     
 
@@ -43,38 +44,9 @@ def set_timer_end(user_id):
         'versionID': 'production'
         }
 
-    response = requests.post(f"{BASE_URL}", json=payload, headers=headers)
-    print(response.text)
-
+    requests.post(f"{BASE_URL}", json=payload, headers=headers)
 
 
 def trigger_submit_code(user_id, code):
+    return interact(user_id, { 'type': 'text', 'payload': code })
 
-    set_variable(user_id, "code_response", code)
-    
-    payload = { "action": {
-        "type": "event",
-        "payload": {
-            "event": {
-                "name": "submit_code"
-            }
-        }
-    } }
-    headers = {
-        'Authorization': API_KEY,
-        'versionID': 'production'
-        }
-
-    response = requests.post(f"{BASE_URL}", json=payload, headers=headers)
-    print(response.text)
-
-
-def set_variable(user_id, variable_name, variable_value):
-    payload = {variable_name: variable_value}
-    headers = {
-        'Authorization': API_KEY,
-        'versionID': 'production'
-    }
-
-    response = requests.patch(f"{BASE_URL}/variables", json=payload, headers=headers)
-    print(response.text)

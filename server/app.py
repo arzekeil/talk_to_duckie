@@ -1,6 +1,6 @@
 from flask import Flask, request
 from flask_cors import CORS
-from voiceflow import interact, set_timer_end, set_variable, trigger_submit_code
+from voiceflow import interact, set_timer_end, trigger_submit_code
 import uuid
 
 app = Flask(__name__)

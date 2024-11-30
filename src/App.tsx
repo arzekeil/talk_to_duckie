@@ -58,7 +58,7 @@ const App: React.FC = () => {
           messageLine,
         );
         addRecipientMessage(aiMessage);
-        await new Promise((resolve) => setTimeout(resolve, 2000));
+        await new Promise((resolve) => setTimeout(resolve, 1000));
       }
     } catch (error) {
       setErrorMessage("Error fetching AI response. Please try again later.");
@@ -105,18 +105,30 @@ const App: React.FC = () => {
     setLoading(true);
     setErrorMessage(null); // Clear any existing errors
     try {
-      const response = await fetch(`${BASE_URL}/run_code`, {
+      const response = await fetch(`${BASE_URL}/submit_code`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ code }),
+        body: JSON.stringify({ code })
       });
 
       if (!response.ok) throw new Error("Failed to execute code");
 
       const data = await response.json();
       setCodeOutput(data.output);
+
+      for (let i = 0; i < data.response.length; i++) {
+        const messageLine = data.response[i] || "I didn't understand that.";
+
+        const aiMessage = new Message(
+          Date.now(),
+          "recipient",
+          messageLine,
+        );
+        addRecipientMessage(aiMessage);
+        await new Promise((resolve) => setTimeout(resolve, 1000));
+      }
     } catch (error) {
       setErrorMessage("Error executing code. Please try again later.");
       console.error("Failed to execute code:", error);
