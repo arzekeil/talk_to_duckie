@@ -1,0 +1,59 @@
+/* index.css */
+
+/* Resetting default styles */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Resetting common elements */
+html, body {
+  width: 100%;
+  height: 100%;
+  font-size: 100%; /* Ensures 16px base font size */
+  font-family: sans-serif; /* You can replace this with your preferred font */
+  line-height: 1; /* Remove extra line spacing */
+}
+
+img, picture, video, canvas, svg {
+  display: block;
+  max-width: 100%;
+}
+
+input, button, textarea, select {
+  font: inherit; /* Inherit font styles */
+  background: none; /* Remove default backgrounds */
+  border: none; /* Remove borders */
+  outline: none; /* Remove outlines */
+}
+
+a {
+  text-decoration: none; /* Remove underline */
+  color: inherit; /* Inherit parent color */
+}
+
+ul, ol {
+  list-style: none; /* Remove bullets and numbers */
+}
+
+table {
+  border-collapse: collapse; /* Remove spacing between cells */
+  border-spacing: 0;
+}
+
+button {
+  cursor: pointer; /* Ensure buttons have pointer cursor */
+}
+
+blockquote, q {
+  quotes: none; /* Remove quotation marks */
+}
+
+hr {
+  border: none; /* Remove default borders */
+  border-top: 1px solid #ccc; /* Optional: Add a custom border */
+}
+
