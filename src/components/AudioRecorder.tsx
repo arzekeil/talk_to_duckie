@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { FaMicrophone, FaStop } from "react-icons/fa";
+import { FaMicrophone, FaStop, FaSpinner } from "react-icons/fa";
 
 interface AudioRecorderProps {
     onSend: (message: { audioUrl: string; text?: string }) => void; // Callback to send a new message with audio URL and text
@@ -7,6 +7,7 @@ interface AudioRecorderProps {
 
 const AudioRecorder: React.FC<AudioRecorderProps> = ({ onSend }) => {
     const [isRecording, setIsRecording] = useState<boolean>(false);
+    const [isTranscribing, setIsTranscribing] = useState<boolean>(false); // Loading state for transcription
     const [recordingTime, setRecordingTime] = useState<number>(0); // Timer state in seconds
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const audioChunksRef = useRef<Blob[]>([]);
@@ -26,6 +27,7 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({ onSend }) => {
             };
 
             mediaRecorderRef.current.onstop = async () => {
+                setIsTranscribing(true); // Start loading state
                 const blob = new Blob(audioChunksRef.current, { type: "audio/mp3" });
                 audioChunksRef.current = [];
                 const audioUrl = URL.createObjectURL(blob);
@@ -33,6 +35,7 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({ onSend }) => {
                 const text = await sendToWhisperAPI(blob); // Transcribe the audio
                 onSend({ audioUrl, text }); // Send both audio URL and transcription to the parent
 
+                setIsTranscribing(false); // End loading state
                 setRecordingTime(0); // Reset the timer
             };
 
@@ -93,27 +96,33 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({ onSend }) => {
     };
 
     return (
-        <div className="flex flex-col items-center justify-center w-full h-full">
+        <div className="flex flex-col items-center justify-center w-full h-full p-4 bg-gray-100 rounded-lg">
             {/* Timer Display */}
             <div
-                className="text-center text-gray-700 font-bold mb-2"
-                style={{ visibility: isRecording ? "visible" : "hidden" }}
+                className={`text-center font-bold mb-4 text-gray-700 transition-opacity duration-300 ${isRecording ? "opacity-100" : "opacity-0"
+                    }`}
             >
                 Recording: {formatTime(recordingTime)}
             </div>
 
+            {/* Loading Indicator */}
+            {isTranscribing && (
+                <div className="flex items-center justify-center mb-4 text-blue-600">
+                    <FaSpinner className="animate-spin mr-2" />
+                    <span>Transcribing...</span>
+                </div>
+            )}
+
             {/* Recording Controls */}
-            <div className="flex items-center justify-center w-full h-full">
-                <button
-                    onClick={isRecording ? stopRecording : startRecording}
-                    className={`flex items-center justify-center w-14 h-14 rounded-full text-white focus:outline-none ${isRecording
-                        ? "bg-red-600 hover:bg-red-700"
-                        : "bg-red-600 hover:bg-red-700"
-                        }`}
-                >
-                    {isRecording ? <FaStop size={24} /> : <FaMicrophone size={24} />}
-                </button>
-            </div>
+            <button
+                onClick={isRecording ? stopRecording : startRecording}
+                className={`flex items-center justify-center w-16 h-16 rounded-full text-white focus:outline-none transition-transform duration-300 ${isRecording
+                    ? "bg-red-600 hover:bg-red-700 transform scale-110"
+                    : "bg-green-600 hover:bg-green-700"
+                    }`}
+            >
+                {isRecording ? <FaStop size={28} /> : <FaMicrophone size={28} />}
+            </button>
         </div>
     );
 };

@@ -1,36 +1,37 @@
 import React, { useState } from "react";
-import Editor from "@monaco-editor/react";
-
 import AppBar from "./components/AppBar";
 import MessageWidget from "./widgets/MessageWidget";
 import AudioRecorder from "./components/AudioRecorder";
 import Message from "./types/Message";
+import CodeEditor from "./components/CodeEditor";
 
 const BASE_URL = "http://localhost:5000";
 
 const App: React.FC = () => {
-  // State to store user messages and recipient (AI) messages
   const [userMessages, setUserMessages] = useState<Message[]>([]);
   const [recipientMessages, setRecipientMessages] = useState<Message[]>([]);
   const [start, setStart] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [codeOutput, setCodeOutput] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
-  // Function to handle adding a user message
   const addUserMessage = (message: Message) => {
     setUserMessages((prevMessages) => [...prevMessages, message]);
-
-    // Simulate an AI response based on the user message
-    getAIResponse(message.text || ""); // Pass the user message text to the AI model
+    getAIResponse(message.text || "");
   };
 
-  // Function to handle adding a recipient (AI) message
   const addRecipientMessage = (message: Message) => {
     setRecipientMessages((prevMessages) => [...prevMessages, message]);
   };
 
-  // Mock function to simulate an API call to the AI model
+  const sortMessages = () => {
+    return [...userMessages, ...recipientMessages].sort((a, b) => a.id - b.id);
+  };
+
   const getAIResponse = async (userText: string) => {
+    setLoading(true);
+    setErrorMessage(null); // Clear any existing errors
     try {
-      // Simulate an API call
       const response = await fetch(`${BASE_URL}/parse_response`, {
         method: "POST",
         headers: {
@@ -43,7 +44,6 @@ const App: React.FC = () => {
 
       const data = await response.json();
 
-      console.log(data.response)
       for (let i = 0; i < data.response.length; i++) {
         const aiMessage = new Message(
           Date.now(),
@@ -53,21 +53,19 @@ const App: React.FC = () => {
         addRecipientMessage(aiMessage);
         await new Promise((resolve) => setTimeout(resolve, 2000));
       }
-
     } catch (error) {
+      setErrorMessage("Error fetching AI response. Please try again later.");
       console.error("Error fetching AI response:", error);
+    } finally {
+      setLoading(false);
     }
   };
 
-  // Combine user and recipient messages for rendering in the chat UI
-  const allMessages = [...userMessages, ...recipientMessages].sort(
-    (a, b) => a.id - b.id
-  );
-
   const startSession = async () => {
     setStart(true);
+    setLoading(true);
+    setErrorMessage(null); // Clear any existing errors
     try {
-      // Simulate an API call
       const response = await fetch(`${BASE_URL}/start`, {
         method: "POST",
         headers: {
@@ -75,11 +73,10 @@ const App: React.FC = () => {
         },
       });
 
-      if (!response.ok) throw new Error("Failed to fetch AI response");
+      if (!response.ok) throw new Error("Failed to start session");
 
       const data = await response.json();
 
-      console.log(data.response)
       for (let i = 0; i < data.response.length; i++) {
         const aiMessage = new Message(
           Date.now(),
@@ -89,58 +86,116 @@ const App: React.FC = () => {
         addRecipientMessage(aiMessage);
         await new Promise((resolve) => setTimeout(resolve, 2000));
       }
-
     } catch (error) {
-      console.error("Error fetching AI response:", error);
+      setErrorMessage("Error starting session. Please try again later.");
+      console.error("Error starting session:", error);
+    } finally {
+      setLoading(false);
     }
+  };
 
-  }
+  const handleRunCode = async (code: string) => {
+    setLoading(true);
+    setErrorMessage(null); // Clear any existing errors
+    try {
+      const response = await fetch(`${BASE_URL}/run_code`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ code }),
+      });
+
+      if (!response.ok) throw new Error("Failed to execute code");
+
+      const data = await response.json();
+      setCodeOutput(data.output);
+    } catch (error) {
+      setErrorMessage("Error executing code. Please try again later.");
+      console.error("Failed to execute code:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-200 to-gray-100 flex flex-col">
-      {/* AppBar */}
       <AppBar />
 
-      {/* Main Content */}
-      <main className="flex-grow flex items-center justify-center">
+      <main className="flex-grow flex">
         {!start && (
-          <button
-            className="bg-blue-500 text-white p-2 rounded"
-            onClick={startSession}
-          >
-            Start
-          </button>
+          <div className="flex-grow flex justify-center items-center">
+            <button
+              className="bg-blue-500 text-white p-2 rounded"
+              onClick={startSession}
+              disabled={loading}
+            >
+              {loading ? "Loading..." : "Start"}
+            </button>
+          </div>
         )}
-        {start &&
-          <>
-            <div className="bg-white shadow-lg rounded-xl w-full max-w-lg flex flex-col h-full">
-              <Editor
-                height="40vh"
+        {start && (
+          <div
+            className="flex flex-grow"
+            style={{
+              height: "calc(100vh - 64px)", // Adjust for AppBar height
+            }}
+          >
+            {/* Code Editor */}
+            <div
+              className="flex-grow bg-white shadow-lg rounded-l-xl p-4"
+              style={{
+                width: "50%",
+              }}
+            >
+              <CodeEditor
                 defaultLanguage="python"
-                theme="vs-dark"
+                onRun={handleRunCode}
               />
-              <button className="bg-blue-500 text-white p-4 rounded-b-xl">Run</button>
-
+              {loading && <div className="text-center mt-4">Running code...</div>}
+              {codeOutput && (
+                <div className="bg-gray-200 p-4 mt-4 rounded">
+                  <strong>Output:</strong>
+                  <pre>{codeOutput}</pre>
+                </div>
+              )}
             </div>
-            <div className="bg-white shadow-lg rounded-xl w-full max-w-lg flex flex-col h-full">
+
+            {/* Chat Section */}
+            <div
+              className="bg-white shadow-lg rounded-r-xl flex flex-col"
+              style={{
+                width: "50%",
+              }}
+            >
               {/* Chat Messages */}
               <div className="flex-grow p-4 space-y-4 overflow-y-auto">
-                {allMessages.map((message) => (
+                {sortMessages().map((message) => (
                   <MessageWidget key={message.id} message={message} />
                 ))}
               </div>
-
+              {/* Error Message */}
+              {errorMessage && (
+                <div className="text-red-500 text-center py-2">{errorMessage}</div>
+              )}
               {/* Audio Recorder */}
-              <div className="bg-gray-100 border-t border-gray-300 p-4 rounded-b-xl mb-4">
+              <div className="bg-gray-100 border-t border-gray-300 p-4 rounded-b-xl">
                 <AudioRecorder
                   onSend={({ audioUrl, text }) =>
-                    addUserMessage(new Message(Date.now(), "user", text || "Audio message sent", audioUrl))
+                    addUserMessage(
+                      new Message(
+                        Date.now(),
+                        "user",
+                        text || "Audio message sent",
+                        audioUrl
+                      )
+                    )
                   }
                 />
               </div>
             </div>
-          </>
-        }
+          </div>
+        )}
       </main>
     </div>
   );
