@@ -23,6 +23,11 @@ const App: React.FC = () => {
   const [showMessages, setShowMessages] = useState(true); // State to toggle message visibility
   const [showFeedback, setShowFeedback] = useState(false);
   const [feedback, setFeedback] = useState("");
+  const [timer, setTimer] = useState(0);
+
+  const updateTimer = (newTimerValue: number) => {
+    setTimer(newTimerValue);
+  };
 
   const addUserMessage = (message: Message) => {
     setUserMessages((prevMessages) => [...prevMessages, message]);
@@ -187,7 +192,12 @@ const App: React.FC = () => {
               value={question}
               options={{ readOnly: true, lineNumbers: "off" }}
             />
-            <CodeEditor defaultLanguage="python" onRun={handleRunCode} />
+            <CodeEditor 
+              defaultLanguage="python"
+              theme="vs-dark"
+              timer={timer}
+              onRun={handleRunCode} 
+            />
             {codeOutput && (
               <Paper elevation={1} sx={{ p: 2, mt: 2 }}>
                 <Typography variant="subtitle1" fontWeight="bold">
