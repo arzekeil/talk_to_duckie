@@ -23,7 +23,7 @@ const App: React.FC = () => {
   const [showMessages, setShowMessages] = useState(true); // State to toggle message visibility
   const [showFeedback, setShowFeedback] = useState(false);
   const [feedback, setFeedback] = useState("");
-  const [timer, setTimer] = useState(10);  // 2 mins
+  const [timer, setTimer] = useState(120);  // 2 mins
   const [timerStart, setTimerStart] = useState(false);
 
 
