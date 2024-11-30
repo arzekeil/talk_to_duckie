@@ -31,20 +31,8 @@ def interact(user_id, request):
     
 
 def set_timer_end(user_id):
-    payload = { "action": {
-        "type": "event",
-        "payload": {
-            "event": {
-                "name": "timer_end"
-            }
-        }
-    } }
-    headers = {
-        'Authorization': API_KEY,
-        'versionID': 'production'
-        }
-
-    requests.post(f"{BASE_URL}", json=payload, headers=headers)
+    response = interact(user_id, { 'type': 'text', 'payload': 'timer end' })
+    return response
 
 
 def trigger_submit_code(user_id, code):
