@@ -114,7 +114,7 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
     };
 
     return (
-        <Box display="flex" flexDirection="column" height="90vh" p={2}>
+        <Box display="flex" flexDirection="column" height="100vh" p={2}>
             {/* Top Bar with Language Selector and Timer */}
             <Box mb={2} display="flex" alignItems="center" justifyContent="space-between">
                 {/* Language Selector */}
