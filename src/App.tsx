@@ -2,32 +2,39 @@ import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-d
 import RecordScreen from './RecordScreen';
 import HomeScreen from './HomeScreen';
 import { Box } from '@mui/material';
-import MyAppBar from './components/MyAppBar';
 import LoginButton from './LoginScreen';
 import { useAuth0 } from '@auth0/auth0-react';
+import ProtectedRoute from './components/ProtectedRoute';
 
 
 const App = () => {
-    const { user, isAuthenticated, isLoading } = useAuth0();
+    const { isLoading } = useAuth0();
+
+    if (isLoading) {
+        return <div>Loading...</div>; // Show loading spinner or placeholder while checking authentication status
+    }
 
     return (
         <Router>
             <Box display="flex" flexDirection="column" minHeight="100vh" bgcolor="grey.100">
-                <MyAppBar />
                 <Routes>
                     <Route path="/login" element={
-                        isAuthenticated ? <Navigate to="/" /> : <LoginButton />
+                        <LoginButton />
                     }
                     />
                     <Route
                         path="/"
                         element={
-                            isAuthenticated ? <HomeScreen /> : <Navigate to="/login" />
+                            <ProtectedRoute element={<HomeScreen />} />
                         }
                     />
-                    <Route path="/mock" element={
-                        isAuthenticated ? <RecordScreen /> : <Navigate to="/login" />
-                    } />
+                    <Route
+                        path="/mock"
+                        element={
+                            <ProtectedRoute element={<RecordScreen />} />
+                        }
+                    />
+                    {/* <ProtectedRoute path="/mock" component={RecordScreen} /> */}
                 </Routes>
             </Box>
         </Router>
