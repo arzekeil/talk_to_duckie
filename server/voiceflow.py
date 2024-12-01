@@ -26,13 +26,25 @@ def interact(user_id, request):
             replies.append(trace['payload']['message'])
         elif trace["type"] == "end":
             print("# End of conversation")
-            # replies.append(False)
     return replies
     
 
 def set_timer_end(user_id):
-    response = interact(user_id, { 'type': 'text', 'payload': 'timer end' })
-    return response
+
+    url = f"{BASE_URL}/variables"
+
+    payload = { "timer_finished": "true" }
+    headers = {
+        "accept": "application/json",
+        "content-type": "application/json",
+        'Authorization': API_KEY,
+        'versionID': 'production'
+    }
+
+    requests.patch(url, json=payload, headers=headers)
+
+    trigger_response = interact(user_id, { 'type': 'text', 'payload': 'timer end' })
+    return trigger_response
 
 
 def trigger_submit_code(user_id, code):
