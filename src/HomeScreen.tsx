@@ -1,6 +1,7 @@
 import { Box, Tab, Tabs } from "@mui/material"
 import { useState } from "react"
 import InterviewSetupForm from "./components/setupInterview/InterviewSetupForm"
+import RecordingList from "./components/history/RecordingList"
 
 const HomeScreen = () => {
     const [tabValue, setTabValue] = useState(0)
@@ -11,7 +12,7 @@ const HomeScreen = () => {
     }
 
     return (
-        <Box padding={8} maxWidth='500px' margin='0 auto'>
+        <Box padding={8} margin='0 auto'>
             <Tabs value={tabValue} onChange={handleTabChange} >
                 <Tab label="Start New Meeting" />
                 <Tab label="History" />
@@ -22,7 +23,11 @@ const HomeScreen = () => {
                         <InterviewSetupForm />
                     </>
                 }
-                {tabValue === 1 && <h1>show history here</h1>}
+                {tabValue === 1 &&
+                    <>
+                        <RecordingList />
+                    </>
+                }
             </div>
         </Box>
     )
