@@ -1,6 +1,5 @@
-import { Box, Button, Tab, Tabs } from "@mui/material"
+import { Box, Tab, Tabs } from "@mui/material"
 import { useState } from "react"
-import { Link } from "react-router-dom"
 import InterviewSetupForm from "./components/setupInterview/InterviewSetupForm"
 
 const HomeScreen = () => {
@@ -10,20 +9,19 @@ const HomeScreen = () => {
         setTabValue(newValue)
     }
 
-
     return (
         <Box padding={8} maxWidth='500px' margin='0 auto'>
             <Tabs value={tabValue} onChange={handleTabChange} >
-                <Tab label="History" />
                 <Tab label="Start New Meeting" />
+                <Tab label="History" />
             </Tabs>
             <div>
-                {tabValue === 0 && <h1>show history here</h1>}
-                {tabValue === 1 &&
+                {tabValue === 0 &&
                     <>
                         <InterviewSetupForm />
                     </>
                 }
+                {tabValue === 1 && <h1>show history here</h1>}
             </div>
         </Box>
     )
