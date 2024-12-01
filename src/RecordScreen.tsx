@@ -60,7 +60,6 @@ const App: React.FC = () => {
 
       for (let i = 0; i < data.response.length; i++) {
         const messageLine = data.response[i] || "I didn't understand that.";
-        console.log("Message line: ", messageLine);
         const words = messageLine.split(" ");
         const lastWord = words[words.length - 1];
         let aiMessage;
@@ -147,7 +146,6 @@ const App: React.FC = () => {
 
       for (let i = 0; i < data.response.length; i++) {
         const messageLine = data.response[i] || "I didn't understand that.";
-        console.log(messageLine);
         if (messageLine.startsWith("END_SESSION")) {
           setShowFeedback(true);
           console.log(data.response[i + 1]);
@@ -155,8 +153,19 @@ const App: React.FC = () => {
           break;
         }
 
-        const aiMessage = new Message(Date.now(), "recipient", messageLine);
+        const words = messageLine.split(" ");
+        const lastWord = words[words.length - 1];
+        let aiMessage;
+        let emote = "talking";
+        if (lastWord.startsWith("(") && lastWord.endsWith(")")) {
+          aiMessage = new Message(Date.now(), "recipient", words.slice(0, -1).join(" "));
+          emote = lastWord.slice(1, -1);
+        } else {
+          aiMessage = new Message(Date.now(), "recipient", messageLine);
+        }
         addRecipientMessage(aiMessage);
+        setDuckFace(emote);
+
         await new Promise((resolve) => setTimeout(resolve, 1000));
       }
     } catch (error) {
