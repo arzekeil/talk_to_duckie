@@ -252,7 +252,7 @@ const App: React.FC = () => {
         display="flex"
         flexDirection="column"
       >
-        <ReactionsPanel />
+        <ReactionsPanel  />
         <AudioRecorder
           onSend={({ audioUrl, text }) =>
             addUserMessage(
