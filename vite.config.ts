@@ -6,16 +6,6 @@ export default defineConfig({
   server: {
     port: 3000, // Development server port
     proxy: {
-      '/proxy': {
-        target: 'http://127.0.0.1:9000', // Replace with your backend server's Docker service name and port
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/proxy/, ''), // Optional: rewrite the API prefix
-      },
-      '/parse_response': {
-        target: 'http://127.0.0.1:5000', 
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/parse_response/, ''), // Optional: rewrite the API prefix
-      },
     },
   },
 });

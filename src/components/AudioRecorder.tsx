@@ -32,7 +32,7 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({ onSend }) => {
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const audioChunksRef = useRef<Blob[]>([]);
     const timerRef = useRef<ReturnType<typeof setInterval> | null>(null); // Timer reference
-    const whisperEndpoint = "http://localhost:3000/proxy/asr?task=transcribe&output=json";
+    const BASE_URL = "http://localhost:5000";
 
     const startRecording = async () => {
         try {
@@ -52,7 +52,7 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({ onSend }) => {
                 audioChunksRef.current = [];
                 const audioUrl = URL.createObjectURL(blob);
 
-                const text = await sendToWhisperAPI(blob); // Transcribe the audio
+                const text = await sendToSTTAPI(blob); // Transcribe the audio
                 onSend({ audioUrl, text }); // Send both audio URL and transcription to the parent
 
                 setIsTranscribing(false); // End loading state
@@ -84,29 +84,28 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({ onSend }) => {
         }
     };
 
-    const sendToWhisperAPI = async (audioBlob: Blob): Promise<string | undefined> => {
+    const sendToSTTAPI = async (audioBlob: Blob): Promise<string | undefined> => {
         const formData = new FormData();
-        formData.append("audio_file", audioBlob, "audio.mp3");
-
+        formData.append("audio_file", audioBlob, "audio.mp3"); // Ensure the key matches Flask's expected field name
+    
         try {
-            const response = await fetch(whisperEndpoint, {
+            const response = await fetch(`${BASE_URL}/stt`, {
                 method: "POST",
-                headers: { Accept: "application/json" },
-                body: formData,
+                body: formData, // Send FormData instead of raw Blob
             });
-
+    
             if (response.ok) {
                 const data = await response.json();
-                return data.text; // Return the transcription text
+                return data.result?.text; // Adjust this based on the Cloudflare Whisper API response
             } else {
-                console.error("Failed to transcribe audio:", response);
+                console.error("Failed to transcribe audio:", response.statusText);
                 return undefined;
             }
         } catch (error) {
-            console.error("Error sending audio to Whisper API:", error);
+            console.error("Error sending audio to STT API:", error);
             return undefined;
         }
-    };
+    };    
 
     // Format the recording time as mm:ss
     const formatTime = (time: number) => {
