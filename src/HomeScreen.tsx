@@ -1,6 +1,7 @@
 import { Box, Button, Tab, Tabs } from "@mui/material"
 import { useState } from "react"
 import { Link } from "react-router-dom"
+import InterviewSetupForm from "./components/setupInterview/InterviewSetupForm"
 
 const HomeScreen = () => {
     const [tabValue, setTabValue] = useState(0)
@@ -20,12 +21,7 @@ const HomeScreen = () => {
                 {tabValue === 0 && <h1>show history here</h1>}
                 {tabValue === 1 &&
                     <>
-                        <h1>show create meeting dialogue here</h1>
-                        <Link to="/mock">
-                            <Button variant="contained" color="primary">
-                                Start Meeting
-                            </Button>
-                        </Link>
+                        <InterviewSetupForm />
                     </>
                 }
             </div>
