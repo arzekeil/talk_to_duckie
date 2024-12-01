@@ -21,7 +21,6 @@ const RecordingButton = styled(Button)(({ theme }) => ({
     fontSize: "28px",
     boxShadow: theme.shadows[4],
     "&:hover": {
-        transform: "scale(1.1)",
         boxShadow: theme.shadows[6],
     },
 }));
@@ -151,9 +150,9 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({ onSend }) => {
             <RecordingButton
                 onClick={isRecording ? stopRecording : startRecording}
                 sx={{
-                    bgcolor: isRecording ? "error.main" : "success.main",
+                    bgcolor: isRecording ? "error.main" : "primary.main",
                     "&:hover": {
-                        bgcolor: isRecording ? "error.dark" : "success.dark",
+                        bgcolor: isRecording ? "error.dark" : "primary.dark",
                     },
                 }}
             >

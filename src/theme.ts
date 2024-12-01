@@ -7,19 +7,19 @@ const theme = createTheme({
     palette: {
         primary: {
             main: '#c28b1d',
-            light: '#63a4ff', // Light variant
-            dark: '#004ba0', // Dark variant
+            light: '#c28b1d', // Light variant
+            dark: '#AB5F13', // Dark variant
             contrastText: '#F3F9E3', // Text color for primary buttons
         },
         secondary: {
             main: '#69140E', // Secondary color (red)
             light: '#ff5c8d', // Light variant
-            dark: '#9a0036', // Dark variant
+            dark: '#5A0F09', // Dark variant
             contrastText: '#F3F9E3', // Text color for secondary buttons
         },
         background: {
             default: '#f5f5f5', // Default background color
-            paper: '#ffffff', // Background for cards and dialogs
+            paper: '#f5f5f5', // Background for cards and dialogs
         },
         text: {
             primary: '#333333', // Default text color

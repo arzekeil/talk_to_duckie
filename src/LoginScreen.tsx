@@ -43,14 +43,13 @@ const LoginButton = () => {
             </Typography>
             <Button
                 onClick={() => loginWithRedirect()}
+                variant="contained"
+                color="secondary"
                 sx={{
-                    backgroundColor: "#69140E",
                     color: "primary.contrastText",
                     padding: "12px 24px",
                     fontSize: "1.2rem",
-                    '&:hover': {
-                        backgroundColor: "#8A1E14"
-                    }
+                   
                 }}
             >
                 Login with Auth0

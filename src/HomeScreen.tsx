@@ -11,8 +11,8 @@ const HomeScreen = () => {
 
 
     return (
-        <Box padding={8}>
-            <Tabs value={tabValue} onChange={handleTabChange}>
+        <Box padding={8} maxWidth='500px' margin='0 auto'>
+            <Tabs value={tabValue} onChange={handleTabChange} >
                 <Tab label="History" />
                 <Tab label="Start New Meeting" />
             </Tabs>
