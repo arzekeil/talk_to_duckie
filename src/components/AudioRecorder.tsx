@@ -32,7 +32,7 @@ const AudioRecorder: React.FC<AudioRecorderProps> = ({ onSend }) => {
     const mediaRecorderRef = useRef<MediaRecorder | null>(null);
     const audioChunksRef = useRef<Blob[]>([]);
     const timerRef = useRef<ReturnType<typeof setInterval> | null>(null); // Timer reference
-    const BASE_URL = "http://localhost:5000";
+    const BASE_URL = import.meta.env.VITE_API;
 
     const startRecording = async () => {
         try {

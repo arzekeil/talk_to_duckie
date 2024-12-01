@@ -1,5 +1,5 @@
 import React from "react";
-import { FormControlLabel, Checkbox, FormGroup, FormLabel, Box, Typography, Select, MenuItem } from "@mui/material";
+import { FormControlLabel, Checkbox, FormGroup, Typography } from "@mui/material";
 
 interface Topic {
     id: string;

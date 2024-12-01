@@ -2,7 +2,6 @@ import { useAuth0 } from "@auth0/auth0-react";
 import { Avatar, Box, Button, Typography } from "@mui/material";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import theme from "./theme";
 import Loading from "./components/Loading";
 
 

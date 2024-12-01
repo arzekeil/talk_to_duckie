@@ -3,7 +3,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { useEffect } from 'react';
 import MyAppBar from './MyAppBar';
 
-const ProtectedRoute = ({ element }) => {
+const ProtectedRoute = ({ element }: { element: any }) => {
     const { isAuthenticated, isLoading } = useAuth0();
     const navigate = useNavigate();
 

@@ -3,30 +3,27 @@ import MessageWidget from "./widgets/MessageWidget";
 import AudioRecorder from "./components/AudioRecorder";
 import Message from "./types/Message";
 import CodeEditor from "./components/CodeEditor";
-import { Box, Button, CircularProgress, Paper, Typography, Switch, FormControlLabel, Modal } from "@mui/material";
+import { Box, Button, Paper, Typography, Switch, FormControlLabel, Modal } from "@mui/material";
 import { Editor } from "@monaco-editor/react";
 
 import { MuiMarkdown } from 'mui-markdown';
 import ReactionsPanel from "./components/reactions-panel/ReactionsPanel";
 
-const BASE_URL = "http://localhost:5000";
+const BASE_URL = import.meta.env.VITE_API;
 
 const App: React.FC = () => {
   const [userMessages, setUserMessages] = useState<Message[]>([]);
   const [recipientMessages, setRecipientMessages] = useState<Message[]>([]);
   const [start, setStart] = useState(false);
   const sessionStartedRef = useRef(false); // Tracks whether the session has started
-  const [loading, setLoading] = useState(false);
   const [codeOutput, setCodeOutput] = useState<string | null>(null);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [question, setQuestion] = useState("");
   const [showMessages, setShowMessages] = useState(false); // State to toggle message visibility
   const [showFeedback, setShowFeedback] = useState(false);
   const [feedback, setFeedback] = useState("");
-  const [timer, setTimer] = useState(120);  // 2 mins
+  const timer = 120;  // 2 mins
   const [timerStart, setTimerStart] = useState(false);
   const [duckFace, setDuckFace] = useState("talking");
-
 
   const addUserMessage = (message: Message) => {
     setUserMessages((prevMessages) => [...prevMessages, message]);
@@ -43,8 +40,6 @@ const App: React.FC = () => {
   };
 
   const getAIResponse = async (userText: string) => {
-    setLoading(true);
-    setErrorMessage(null);
     try {
       const response = await fetch(`${BASE_URL}/parse_response`, {
         method: "POST",
@@ -75,10 +70,8 @@ const App: React.FC = () => {
         await new Promise((resolve) => setTimeout(resolve, 1000));
       }
     } catch (error) {
-      setErrorMessage("Error fetching AI response. Please try again later.");
       console.error("Error fetching AI response:", error);
     } finally {
-      setLoading(false);
     }
   };
 
@@ -88,8 +81,6 @@ const App: React.FC = () => {
 
     setStart(true);
 
-    setLoading(true);
-    setErrorMessage(null);
     try {
       const response = await fetch(`${BASE_URL}/start`, {
         method: "POST",
@@ -121,16 +112,12 @@ const App: React.FC = () => {
         await new Promise((resolve) => setTimeout(resolve, 2000));
       }
     } catch (error) {
-      setErrorMessage("Error starting session. Please try again later.");
       console.error("Error starting session:", error);
     } finally {
-      setLoading(false);
     }
   };
 
   const handleRunCode = async (code: string) => {
-    setLoading(true);
-    setErrorMessage(null);
     try {
       const response = await fetch(`${BASE_URL}/submit_code`, {
         method: "POST",
@@ -170,10 +157,8 @@ const App: React.FC = () => {
         await new Promise((resolve) => setTimeout(resolve, 1000));
       }
     } catch (error) {
-      setErrorMessage("Error executing code. Please try again later.");
       console.error("Failed to execute code:", error);
     } finally {
-      setLoading(false);
     }
   };
 
@@ -182,7 +167,7 @@ const App: React.FC = () => {
     const synth = window.speechSynthesis;
     const utterance = new SpeechSynthesisUtterance(text);
     utterance.rate = 1; // Adjust speed
-    utterance.pitch = 2; // Adjust pitch
+    utterance.pitch = 1; // Adjust pitch
     synth.speak(utterance);
   };
 
@@ -218,7 +203,6 @@ const App: React.FC = () => {
           timer={timer}
           onRun={handleRunCode}
           addRecipientMessage={addRecipientMessage}
-          setErrorMessage={setErrorMessage}
           setShowFeedback={setShowFeedback}
           setFeedback={setFeedback}
           timerStart={timerStart}

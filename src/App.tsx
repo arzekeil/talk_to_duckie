@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import RecordScreen from './RecordScreen';
 import HomeScreen from './HomeScreen';
 import { Box } from '@mui/material';

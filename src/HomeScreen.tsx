@@ -7,6 +7,7 @@ const HomeScreen = () => {
 
     const handleTabChange = (event: React.ChangeEvent<{}>, newValue: number) => {
         setTabValue(newValue)
+        event.preventDefault();
     }
 
     return (

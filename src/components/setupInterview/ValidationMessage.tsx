@@ -1,6 +1,5 @@
-import React from "react";
 import { ErrorOutline } from '@mui/icons-material';
-import { Alert, AlertTitle, Typography } from '@mui/material';
+import { Alert, Typography } from '@mui/material';
 
 interface ValidationMessageProps {
     message?: string;

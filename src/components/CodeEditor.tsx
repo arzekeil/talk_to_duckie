@@ -4,7 +4,7 @@ import Message from "../types/Message";
 import { Box, Button, MenuItem, Select, Typography } from "@mui/material";
 
 
-const BASE_URL = "http://localhost:5000";
+const BASE_URL = import.meta.env.VITE_API;
 
 
 
@@ -14,7 +14,6 @@ type CodeEditorProps = {
     onRun?: (code: string) => void;
     timer?: number; // Timer in seconds
     addRecipientMessage: (message: Message) => void;
-    setErrorMessage: (error: string) => void;
     setShowFeedback: (show: boolean) => void;
     setFeedback: (feedback: string) => void;
     timerStart: boolean;
@@ -26,7 +25,6 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
     onRun,
     timer = 0, // Initial timer value in seconds
     addRecipientMessage,
-    setErrorMessage,
     setShowFeedback,
     setFeedback,
     timerStart,
@@ -71,7 +69,6 @@ const CodeEditor: React.FC<CodeEditorProps> = ({
                 await new Promise((resolve) => setTimeout(resolve, 1000));
             }
         } catch (error) {
-            setErrorMessage("Error fetching AI response. Please try again later.");
             console.error("Error fetching AI response:", error);
         }
     }
