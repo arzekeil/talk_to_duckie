@@ -23,16 +23,17 @@ const topics: Topic[] = [
 ];
 
 const TopicsSelect = ({
-    selectedTopics = topics.map((topic) => topic.id),
+    selectedTopics: initialSelectedTopics = topics.map((topic) => topic.id),
     onChange = () => { },
 }: TopicsSelectProps) => {
+    const [selectedTopics, setSelectedTopics] = React.useState<string[]>(initialSelectedTopics);
 
     const handleTopicChange = (topicId: string, checked: boolean) => {
-        if (checked) {
-            onChange([...selectedTopics, topicId]);
-        } else {
-            onChange(selectedTopics.filter((id) => id !== topicId));
-        }
+        const updatedSelectedTopics = checked
+            ? [...selectedTopics, topicId]
+            : selectedTopics.filter((id) => id !== topicId);
+        setSelectedTopics(updatedSelectedTopics);
+        onChange(updatedSelectedTopics);
     };
 
     return (
