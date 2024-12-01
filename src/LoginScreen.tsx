@@ -3,10 +3,13 @@ import { Avatar, Box, Button, Typography } from "@mui/material";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import Loading from "./components/Loading";
+import imageMap from "./components/reactions-panel/imageMap";
+
 
 
 const LoginButton = () => {
     const { loginWithRedirect, isAuthenticated, isLoading } = useAuth0();
+    const filePath = imageMap['talking'];
 
     const navigate = useNavigate();
 
@@ -28,7 +31,7 @@ const LoginButton = () => {
             padding="5%"
             sx={{ backgroundColor: "primary.main", height: "100vh", gap: 2 }}
         >
-            <Avatar alt='duck' src='src\assets\avatar\talking.png'
+            <Avatar alt='duck' src={filePath}
                 sx={{
                     outlineColor: "primary.contrastText", // Change outline color to white
                     outlineWidth: "3px",
