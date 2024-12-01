@@ -19,6 +19,11 @@ CLOUDFLARE_API_TOKEN = os.getenv('CLOUDFLARE_API_TOKEN')
 CLOUDFLARE_WHISPER_URL = f"https://api.cloudflare.com/client/v4/accounts/{CLOUDFLARE_ACCOUNT_ID}/ai/run/@cf/openai/whisper"
 
 
+@app.route("/")
+def health_check():
+    return "Server is running"
+
+
 @app.route("/stt", methods=["POST", "OPTIONS"])
 def proxy_stt():
     # Handle preflight OPTIONS request
