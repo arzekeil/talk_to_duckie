@@ -14,8 +14,8 @@ createRoot(document.getElementById('root')!).render(
     <ThemeProvider theme={theme}>
       <CssBaseline />
       <Auth0Provider
-        domain="dev-8umbcy6gfupavsp0.us.auth0.com"
-        clientId="IbmIafj7wYww5gZ2PmKT1ljnljDFT159"
+        domain={import.meta.env.VITE_AUTH0_DOMAIN}
+        clientId={import.meta.env.VITE_AUTH0_CLIENT_ID}
         authorizationParams={{
           redirect_uri: window.location.origin
         }}
