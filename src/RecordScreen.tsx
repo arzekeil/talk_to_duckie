@@ -3,7 +3,7 @@ import MessageWidget from "./widgets/MessageWidget";
 import AudioRecorder from "./components/AudioRecorder";
 import Message from "./types/Message";
 import CodeEditor from "./components/CodeEditor";
-import { Box, Button, CircularProgress, Paper, Typography, Switch, FormControlLabel, Modal } from "@mui/material";
+import { Box, Button, CircularProgress, Paper, Typography, Switch, FormControlLabel, Modal, MenuItem, Select } from "@mui/material";
 import { Editor } from "@monaco-editor/react";
 
 import { MuiMarkdown } from 'mui-markdown';
@@ -26,6 +26,8 @@ const App: React.FC = () => {
   const [timer, setTimer] = useState(120);  // 2 mins
   const [timerStart, setTimerStart] = useState(false);
   const [duckFace, setDuckFace] = useState("talking");
+  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
+  const [selectedVoice, setSelectedVoice] = useState<SpeechSynthesisVoice | null>(null);
 
 
   const addUserMessage = (message: Message) => {
@@ -181,10 +183,30 @@ const App: React.FC = () => {
     if (!text) return;
     const synth = window.speechSynthesis;
     const utterance = new SpeechSynthesisUtterance(text);
+
+    if (selectedVoice) {
+      utterance.voice = selectedVoice;
+    }
+
     utterance.rate = 1; // Adjust speed
-    utterance.pitch = 2; // Adjust pitch
+    utterance.pitch = 1; // Adjust pitch
     synth.speak(utterance);
   };
+
+  const fetchVoices = () => {
+    const synth = window.speechSynthesis;
+    const availableVoices = synth.getVoices();
+    setVoices(availableVoices);
+    if (availableVoices.length > 0) {
+      setSelectedVoice(availableVoices[0]); // Default to the first voice
+    }
+  };
+
+
+  useEffect(() => {
+    fetchVoices();
+    window.speechSynthesis.onvoiceschanged = fetchVoices; // Update voices when they change
+  }, []);
 
   useEffect(() => {
     // Automatically start the session when the screen is rendered
@@ -244,6 +266,26 @@ const App: React.FC = () => {
         display="flex"
         flexDirection="column"
       >
+        {/* Voice Selector */}
+        <Box p={2}>
+          <Typography variant="subtitle1" gutterBottom>
+            Select Voice:
+          </Typography>
+          <Select
+            value={selectedVoice?.name || ""}
+            onChange={(e) => {
+              const voice = voices.find((v) => v.name === e.target.value);
+              setSelectedVoice(voice || null);
+            }}
+            fullWidth
+          >
+            {voices.map((voice) => (
+              <MenuItem key={voice.name} value={voice.name}>
+                {voice.name} {voice.lang}
+              </MenuItem>
+            ))}
+          </Select>
+        </Box>
         {/* Toggle Switch */}
         <Box p={2} display="flex" justifyContent="flex-end">
           <FormControlLabel
