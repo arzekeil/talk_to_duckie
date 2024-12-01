@@ -17,17 +17,7 @@ interface RecordingDetailsProps {
 
 const RecordingDetails = ({
     title = "Untitled Recording",
-    duration = 180,
-    currentTime = 0,
-    waveformData,
     notes = "",
-    isPlaying = false,
-    onPlay = () => { },
-    onPause = () => { },
-    onStop = () => { },
-    onSeek = () => { },
-    onSaveNotes = () => { },
-    disabled = false,
 }: RecordingDetailsProps) => {
     return (
         <div className="w-full bg-background p-6 rounded-lg border space-y-4">

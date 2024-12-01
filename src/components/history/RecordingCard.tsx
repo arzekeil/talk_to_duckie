@@ -4,7 +4,6 @@ import {
     AccordionDetails,
     Card
 } from "@mui/material";
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { AccessTime as Clock, ExpandLess as ChevronUp, ExpandMore as ChevronDown } from "@mui/icons-material";
 import RecordingDetails from "./RecordingDetails.tsx";
 

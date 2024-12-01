@@ -4,18 +4,19 @@ import { useEffect } from 'react';
 import MyAppBar from './MyAppBar';
 
 const ProtectedRoute = ({ element }: { element: any }) => {
-    const { isAuthenticated, isLoading } = useAuth0();
+    // const { isAuthenticated, isLoading } = useAuth0();
     const navigate = useNavigate();
 
-    if (isLoading) {
-        return <div>Loading...</div>;
-    }
+    // if (isLoading) {
+    //     return <div>Loading...</div>;
+    // }
 
-    useEffect(() => {
-        if (!isAuthenticated) {
-            navigate('/login');
-        }
-    }, [isAuthenticated, navigate]);
+    const isAuthenticated = true;
+    // useEffect(() => {
+    //     if (!isAuthenticated) {
+    //         navigate('/login');
+    //     }
+    // }, [isAuthenticated, navigate]);
 
     if (isAuthenticated) {
         return (
