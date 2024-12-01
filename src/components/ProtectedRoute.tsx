@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useAuth0 } from '@auth0/auth0-react';
 import { useEffect } from 'react';
+import MyAppBar from './MyAppBar';
 
 const ProtectedRoute = ({ element }) => {
     const { isAuthenticated, isLoading } = useAuth0();
@@ -17,7 +18,12 @@ const ProtectedRoute = ({ element }) => {
     }, [isAuthenticated, navigate]);
 
     if (isAuthenticated) {
-        return element;
+        return (
+            <>
+                <MyAppBar />
+                {element}
+            </>
+        );
     }
 
     navigate('/login');

@@ -6,16 +6,16 @@ import { createTheme } from '@mui/material/styles';
 const theme = createTheme({
     palette: {
         primary: {
-            main: '#1976d2', // Primary color (blue)
+            main: '#c28b1d',
             light: '#63a4ff', // Light variant
             dark: '#004ba0', // Dark variant
-            contrastText: '#ffffff', // Text color for primary buttons
+            contrastText: '#F3F9E3', // Text color for primary buttons
         },
         secondary: {
-            main: '#dc004e', // Secondary color (red)
+            main: '#69140E', // Secondary color (red)
             light: '#ff5c8d', // Light variant
             dark: '#9a0036', // Dark variant
-            contrastText: '#ffffff', // Text color for secondary buttons
+            contrastText: '#F3F9E3', // Text color for secondary buttons
         },
         background: {
             default: '#f5f5f5', // Default background color
@@ -27,7 +27,7 @@ const theme = createTheme({
         },
     },
     typography: {
-        fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+        fontFamily: '"Parkinsans", "Roboto", "Helvetica", "Arial", sans-serif',
         h1: {
             fontSize: '2.5rem',
             fontWeight: 700,

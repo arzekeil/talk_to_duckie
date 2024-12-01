@@ -7,7 +7,7 @@ import { Auth0Provider } from '@auth0/auth0-react';
 import './styles/index.css'
 import theme from './theme.ts';
 import App from './App.tsx'
-import MyAppBar from './components/MyAppBar.tsx';
+
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
@@ -20,7 +20,6 @@ createRoot(document.getElementById('root')!).render(
           redirect_uri: window.location.origin
         }}
       >
-        <MyAppBar />
         <App />
       </Auth0Provider>
     </ThemeProvider>
