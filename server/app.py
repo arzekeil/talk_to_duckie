@@ -7,16 +7,23 @@ import voiceflow as vf
 import uuid
 
 
-app = Flask(__name__)
-CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}})
-
-user_id = str(uuid.uuid4())
-
 load_dotenv()
 
 CLOUDFLARE_ACCOUNT_ID = os.getenv('CLOUDFLARE_ACCOUNT_ID')
 CLOUDFLARE_API_TOKEN = os.getenv('CLOUDFLARE_API_TOKEN')
 CLOUDFLARE_WHISPER_URL = f"https://api.cloudflare.com/client/v4/accounts/{CLOUDFLARE_ACCOUNT_ID}/ai/run/@cf/openai/whisper"
+
+CLIENT_BASE_URL = os.getenv("VITE_CLIENT_BASE_URL")
+
+app = Flask(__name__)
+CORS(app, resources={r"/*": {"origins": CLIENT_BASE_URL}})
+
+user_id = str(uuid.uuid4())
+
+
+@app.route("/")
+def health_check():
+    return "Server is running"
 
 
 @app.route("/stt", methods=["POST", "OPTIONS"])
