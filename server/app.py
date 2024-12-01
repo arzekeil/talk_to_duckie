@@ -1,37 +1,33 @@
 from flask import Flask, request
 from flask_cors import CORS
-from voiceflow import interact, set_timer_end, trigger_submit_code
+import voiceflow as vf
 import uuid
 
 app = Flask(__name__)
 CORS(app)
 
-user_id = str(uuid.uuid4())
-
-
-@app.route('/')
-def hello():
-    return '<h1>Hello, World!</h1>'
-
 
 @app.route("/parse_response", methods=["POST"])
-def parse_recording():
+def parse_user_response():
     data = request.get_json()
-    message = data.get("userText", '')
+    message = data.get("userText", "")
     print("message", message)
-    response = interact(user_id, { 'type': 'text', 'payload': message })
-    return { "response": response }
+
+    return { "response": vf.send_user_response(message) }
 
 
 @app.route("/start", methods=["POST"])
 def start():
-    response = interact(user_id, { 'type': 'launch' })
+    data = request.get_json()
+    timer_value = data.get("timerValue", 120)
+
+    response = vf.start_conversation(timer_value)
     return { "response": response }
 
 
 @app.route("/timer_end", methods=["POST"])
 def timer_end():
-    response = set_timer_end(user_id)
+    response = vf.set_timer_end()
     return { "response": response }
 
 
@@ -39,8 +35,10 @@ def timer_end():
 def submit_code():
     data = request.get_json()
     code = data.get("code", '')
-    response = trigger_submit_code(user_id, code)
+
+    response = vf.trigger_submit_code(code)
     return { "response": response }
+
 
 if __name__ == '__main__':
     app.run(debug=True, port=5000)

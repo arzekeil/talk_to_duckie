@@ -96,6 +96,7 @@ const App: React.FC = () => {
         headers: {
           "Content-Type": "application/json",
         },
+        body: JSON.stringify({ timerValue: timer }),
       });
 
       if (!response.ok) throw new Error("Failed to start session");
