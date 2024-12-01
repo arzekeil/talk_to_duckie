@@ -25,6 +25,7 @@ const App: React.FC = () => {
   const [feedback, setFeedback] = useState("");
   const [timer, setTimer] = useState(120);  // 2 mins
   const [timerStart, setTimerStart] = useState(false);
+  const [duckFace, setDuckFace] = useState("talking");
 
 
   const addUserMessage = (message: Message) => {
@@ -59,8 +60,19 @@ const App: React.FC = () => {
 
       for (let i = 0; i < data.response.length; i++) {
         const messageLine = data.response[i] || "I didn't understand that.";
-        const aiMessage = new Message(Date.now(), "recipient", messageLine);
+        console.log("Message line: ", messageLine);
+        const words = messageLine.split(" ");
+        const lastWord = words[words.length - 1];
+        let aiMessage;
+        let emote = "talking";
+        if (lastWord.startsWith("(") && lastWord.endsWith(")")) {
+          aiMessage = new Message(Date.now(), "recipient", words.slice(0, -1).join(" "));
+          emote = lastWord.slice(1, -1);
+        } else {
+          aiMessage = new Message(Date.now(), "recipient", messageLine);
+        }
         addRecipientMessage(aiMessage);
+        setDuckFace(emote);
         await new Promise((resolve) => setTimeout(resolve, 1000));
       }
     } catch (error) {
@@ -252,7 +264,7 @@ const App: React.FC = () => {
         display="flex"
         flexDirection="column"
       >
-        <ReactionsPanel />
+        <ReactionsPanel mood={duckFace} />
         <AudioRecorder
           onSend={({ audioUrl, text }) =>
             addUserMessage(

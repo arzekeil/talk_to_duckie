@@ -3,10 +3,14 @@ import Box from "@mui/material/Box";
 import WebcamComponent from "./Webcam";
 import AIAvatar from "./AIAvatar";
 
-const ReactionsPanel = () => {
+interface ReactionsPanelProps {
+    mood: string;
+}
+
+const ReactionsPanel = ({ mood }: ReactionsPanelProps) => {
     return (
         <Box
-            
+
             display="flex"
             flexDirection="column" // Stack components vertically
             sx={{
@@ -21,7 +25,7 @@ const ReactionsPanel = () => {
                     justifyContent: "center",
                 }}
             >
-                <AIAvatar />
+                <AIAvatar fileName={mood} />
             </Box>
 
             <Box
