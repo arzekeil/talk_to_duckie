@@ -1,6 +1,6 @@
-# Talk to Teddy
+# Talk to Duckie
 
-## TODO
+## Voiceflow Flow
+![Voiceflow - Main Flow](./images/voiceflow_main.png)
+![Voiceflow - Event FLow](./images/voiceflow_events.png)
 
-- Audio recording to Whisper for ASR.  
-- 
