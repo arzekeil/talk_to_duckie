@@ -3,6 +3,7 @@ import { Avatar, Box, Button, Typography } from "@mui/material";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import theme from "./theme";
+import Loading from "./components/Loading";
 
 
 const LoginButton = () => {
@@ -17,7 +18,7 @@ const LoginButton = () => {
     }, [isAuthenticated, navigate]); // Dependency on `isAuthenticated` to rerun effect when authentication state changes
 
     if (isLoading) {
-        return <div>Loading...</div>;
+        return <Loading />;
     }
     return (
         <Box
@@ -49,7 +50,7 @@ const LoginButton = () => {
                     color: "primary.contrastText",
                     padding: "12px 24px",
                     fontSize: "1.2rem",
-                   
+
                 }}
             >
                 Login with Auth0

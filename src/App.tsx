@@ -5,13 +5,14 @@ import { Box } from '@mui/material';
 import LoginButton from './LoginScreen';
 import { useAuth0 } from '@auth0/auth0-react';
 import ProtectedRoute from './components/ProtectedRoute';
+import Loading from './components/Loading';
 
 
 const App = () => {
     const { isLoading } = useAuth0();
 
     if (isLoading) {
-        return <div>Loading...</div>; // Show loading spinner or placeholder while checking authentication status
+        return <Loading />;
     }
 
     return (
